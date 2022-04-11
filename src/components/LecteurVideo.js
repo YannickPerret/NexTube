@@ -1,5 +1,6 @@
 import React, {useState } from 'react';
 import YouTube from 'react-youtube';
+import AddCut from './AddCut';
 
 function LecteurVideo(props) {
     const videoData = props.video
@@ -28,6 +29,7 @@ function LecteurVideo(props) {
         }, 1000)
     }
 
+
     return (
         <div>
             <YouTube
@@ -35,7 +37,7 @@ function LecteurVideo(props) {
             opts={videoOptions}
             onStateChange={handleChangeState}
             /> 
-            <button onClick={() => console.log(timePlayed)}>Ajouter un Cut</button>
+            <AddCut event={timePlayed} url={videoData.url} />
         </div> 
     );
 }

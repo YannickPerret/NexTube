@@ -25,6 +25,8 @@ app.use(express.urlencoded({
 
 const getVideoInfo = (url) =>{
 
+
+
 }
 
 app.get("/api/getVideo/:slug",async (req, res) => {
@@ -40,7 +42,7 @@ app.get("/api/getVideo/:slug",async (req, res) => {
                 if(result[0]){
                     bdd.query(`SELECT infovideo.*, skip.dataSet 
                     FROM infovideo INNER JOIN skip 
-                    ON skip.idVideo = infovideo.id WHERE infovideo.id = ${result[0].id}`,(error, results) =>{
+                    ON skip.urlVideo = infovideo.url WHERE infovideo.id = ${result[0].id}`,(error, results) =>{
                         if(error){
                             throw  error
                         }
@@ -77,6 +79,72 @@ app.get("/api/getVideo/:slug",async (req, res) => {
     
 })
 
+
+//Ajouter un cut pour une vidéo
+app.post("/api/cut/add", (req, res) => {
+    //Check si un cut existe déjà dans la base de donnée via l'url
+        //sinon push toutes les infos du cut
+    //check si le cut appartiens à l'user
+        //ajouter à la suite le cut
+
+        //Test si l'utilisateur à déjà rentré des données pour cette vidéo
+
+    try{
+        let cut = req.body
+
+        /*let cut = {
+            url:"NC5N5n8wJxI",
+            timeCode:[
+                {begin:80, end:120},
+                {begin:320, end:327},
+                {begin:240, end:280},
+            ]
+        }*/
+
+        if(cut){
+            
+            bdd.query(`SELECT * FROM skip WHERE urlVideo = '${cut.url}' AND idUser = 1`, (error, result) => {
+                if(error) throw error
+
+                if(result[0]){
+                    let newDataSet = JSON.parse(result[0].dataSet)
+                   
+
+                    console.log(cut.timeCode)
+                    cut.timeCode.map((element) => {
+                        //tester qu'il ne soit pas déjà entrée
+                        newDataSet.push(element)
+                    })
+
+
+                    console.log(newDataSet)
+                    newDataSet = JSON.stringify(newDataSet)
+                    // mettre ? à la place de newdataset et mettre la variable après
+                    bdd.query(`UPDATE skip SET dataSet= ? WHERE urlVideo = '${result[0].urlVideo}'`, newDataSet, (error, result) =>{
+                        if(error) throw error;
+
+                        if(result){
+                            console.log("add")
+                        }
+                    })
+                    // Modifier et ajouter les nouveaux skip
+                }
+                else{
+                    //créer une nouvelle entrée avec des données
+                    console.log("ocréer nouvelle data")
+                }
+            })
+        }
+
+
+
+    }catch(e){
+        console.error(e)
+    }
+   
+
+
+})
 
 app.listen(port, () =>{
     console.log(`PortFolio - Database to http://localhost:${port}`)

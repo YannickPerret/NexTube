@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import LecteurVideo from '../components/LecteurVideo';
 import Search from '../components/Search';
+import { setVideoInfo } from '../redux/reducer/videos';
 
 function Video() {
     const [videoInfo, setVideoInfo] = useState()
@@ -8,6 +10,9 @@ function Video() {
         error : false,
         message :""
     })
+
+    const video = useSelector(state => state.video.value)
+
 
 
     const getDataVideo = async (_urlVideo) =>{
@@ -27,6 +32,7 @@ function Video() {
             console.error(e)
         });
     }
+
 
     return (
 
