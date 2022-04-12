@@ -1,12 +1,13 @@
+import Header from './pages/Header.js';
 import Video from './pages/Video.js'
-import './App.css';
+import './styles/App.css';
+import './styles/main.css';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
+        <Header />
         <Video />
-      </header>
     </div>
   );
 }

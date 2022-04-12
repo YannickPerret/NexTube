@@ -5,6 +5,8 @@ import AddCut from './AddCut';
 function LecteurVideo(props) {
     const videoData = props.video
     const [timePlayed, setTimePlayed] = useState(0)
+    const [cutList, setcutList] = useState([])
+    let test = []
 
     const videoOptions = {
         height : '720',
@@ -29,16 +31,24 @@ function LecteurVideo(props) {
         }, 1000)
     }
 
+    const handleCut = (_cut) =>{
+        
+        test.push(_cut)
+
+        console.log(test)
+    }
 
     return (
-        <div>
+        <>
             <YouTube
             videoId={videoData.url} 
             opts={videoOptions}
             onStateChange={handleChangeState}
+            containerClassName='youtubeContainer'
             /> 
-            <AddCut event={timePlayed} url={videoData.url} />
-        </div> 
+
+            <AddCut event={timePlayed} url={videoData.url} onSubmitCut={handleCut}/>
+        </> 
     );
 }
 

@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import LecteurVideo from '../components/LecteurVideo';
+import ListCutVideo from '../components/ListCutVideo';
 import Search from '../components/Search';
-import { setVideoInfo } from '../redux/reducer/videos';
 
 function Video() {
     const [videoInfo, setVideoInfo] = useState()
@@ -11,8 +10,7 @@ function Video() {
         message :""
     })
 
-    const video = useSelector(state => state.video.value)
-
+    const [customCutList, setCustomCutList] = useState()
 
 
     const getDataVideo = async (_urlVideo) =>{
@@ -30,20 +28,33 @@ function Video() {
         })
         .catch(e => {
             console.error(e)
+            setVideoInfo({"url":_urlVideo})
         });
     }
 
 
-    return (
 
-        <div>
-            <Search onChangeVideo={getDataVideo}/>
-            <br />
-            {customError.error ? 
+    return (
+        <div className='main'>
+            <div className='searchBar'>
+                <Search onChangeVideo={getDataVideo}/>
+            </div>
+            
+                {customError.error &&
                 <div>
                     {customError.message}
-                </div> :null}
-            {videoInfo && <LecteurVideo video={videoInfo} />}
+                </div>}
+            {videoInfo &&
+            <div className='main-video'>
+                <div className='customCutList'>
+                    <ListCutVideo customCutList={customCutList}/>
+                </div>
+                <div className='videoPlayer'>
+                    <LecteurVideo video={videoInfo}/>
+                </div>
+            </div>
+            }
+
         </div>
     );
 }

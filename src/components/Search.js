@@ -25,6 +25,7 @@ function Search(props) {
                 <option value="youtube">Youtube</option>
                 <option value="twitch">Twitch</option>
                 <option value="amazonVod">AmazonVideo</option>
+                <option value="facebook">Facebook Live</option>
             </select>
             <input type="text" name='urlSearchVideo' value={idUrlVideo} onChange={(e => setIdUrlVideo(e.target.value))} />
             <button type='submit'>Visionner</button>

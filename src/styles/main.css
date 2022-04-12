@@ -1,0 +1,87 @@
+*{
+    box-sizing: border-box;
+    margin : 0;
+    padding : 0;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+}
+header{
+    width: 100%;
+    color : white;
+    display : flex;
+    justify-content: space-between;
+    height: 75px;
+    margin-bottom : 5vh;
+}
+header div img{
+    position: relative;
+    content: "Logo";
+    color : black;
+}
+
+.main {
+    display : flex;
+    flex-direction: column;
+    width: 100%;
+
+}
+.searchBar{
+    flex : 1;
+    width: 100%;
+    margin-bottom : 5vh;
+}
+
+.main-video{
+    display : flex;
+    flex-direction: row;
+    max-width: 100;
+    justify-content: center;
+}
+.customCutList{
+    flex:1;
+    max-width: 250px;
+    display : flex;
+    background-color: #fff;
+}
+.customCutList h3{
+    color : black;
+}
+.customCutList ul li{
+    background-color: rgb(243, 237, 237);
+    color : black;
+}
+
+.videoPlayer{
+    position: relative;
+    flex: 4;
+}
+
+.youtubeContainer {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+}
+
+.youtubeContainer iframe {
+  position : absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.playerAddCut{
+    width: 100%;
+    height: 100px;
+}
+.playerAddCut button {
+    width: 200px;
+    height: 35%;
+    border-radius: 10px;
+    text-transform: uppercase;
+}
