@@ -24,6 +24,27 @@ app.use(express.urlencoded({
 }))
 
 
+app.get("/api/getVideoBySearch/:search", async (req, res) => {
+
+    let {search} = req.params
+    if(search){
+        bdd.query(`SELECT DISTINCT infovideo.* FROM infovideo WHERE title LIKE '%${search}%' OR url = '${search}'`, (error, result) => {
+            if(error){
+                throw error
+            }
+
+            if(result){
+                res.status(200).send(result)
+            }else{
+                res.status(200).send(null)
+            }
+        })
+    }
+})
+
+
+
+
 app.get("/api/getVideo/:slug",async (req, res) => {
     try{
         let {slug} = req.params

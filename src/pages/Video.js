@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import LecteurVideo from '../components/LecteurVideo';
 import ListCutVideo from '../components/ListCutVideo';
-import Search from '../components/Search';
-import { getVideoByURL } from '../redux/redux';
+import Search from '../components/search/Search';
+import { getVideoByURL } from '../redux/VideoReducer';
 
 function Video() {
     const {video, loading, errorMessage} = useSelector((state) => state.videoInfos)

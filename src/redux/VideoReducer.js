@@ -1,4 +1,4 @@
-import { configureStore, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const getVideoByURL = createAsyncThunk("videoInfos/getVideoByURL", async (url) => {
     return fetch(`http://localhost:3500/api/getVideo/${url}`, { method:"GET" })
@@ -13,7 +13,7 @@ const INITIALSTATE = {
     errorMessage:{error : false, message : ""},
 }
 
-export const videoSlice = createSlice({
+const videoSlice = createSlice({
     name: 'videoInfos',
     initialState: INITIALSTATE,
     reducers:{
@@ -55,10 +55,4 @@ export const videoSlice = createSlice({
     },
 })
 
-
-export const store = configureStore({
-    reducer: {
-        videoInfos : videoSlice.reducer,
-        devTools: true,
-    },
-})
+export default videoSlice.reducer;
