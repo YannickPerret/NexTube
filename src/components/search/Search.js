@@ -43,17 +43,15 @@ function Search(props) {
     return (
         <div>
             <form>
-                <span>Rechercher une vidéo &nbsp;</span>
-                <input type="text" name='userSearchVideo' value={userSearchText} onChange={(e => setUserSearchTest(e.target.value))} />
+                <input type="text" name='userSearchVideo' value={userSearchText} onChange={(e => setUserSearchTest(e.target.value))} placeholder='Rechercher'/>
                 <button type='submit'>Visionner</button>
             </form>
             {listVideoByUserSearch.length > 0 && userSearchText.length > 3 &&
-                <div>
-                    <h3>Résultat : </h3>
+                <div className='searchBarResult'>
                     <ul>
                         {listVideoByUserSearch.map((element) => {
                             return <li key={element.id} onClick={() => onSearchVideo(element.url)}>
-                                        {element.title} 
+                                    {element.idPlateforme === 1 && "YOUTUBE"}  |  {element.title} 
                                     </li>
                         })}
                     </ul>
