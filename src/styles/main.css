@@ -49,9 +49,32 @@ header div img{
 .customCutList h3{
     color : black;
 }
+.customCutList ul{
+    display : flex;
+    flex-direction: column;
+    gap:5px;
+    overflow: auto;
+    height: auto;
+    max-height: 700px;
+}
 .customCutList ul li{
     background-color: rgb(243, 237, 237);
     color : black;
+    font-size: 17px;
+    border : 1px solid #000;
+    width: 100%;
+    padding-left: 10px;
+    text-align: start !important;
+    display : flex;
+}
+.cutListContent{
+    width: 90%;
+}
+.cutListContentDelete{
+    width: 10%;
+    background-color: red;
+    cursor: pointer;
+    vertical-align:middle;
 }
 
 .videoPlayer{

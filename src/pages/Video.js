@@ -1,37 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import LecteurVideo from '../components/LecteurVideo';
 import ListCutVideo from '../components/ListCutVideo';
 import Search from '../components/Search';
+import { getVideoByURL } from '../redux/redux';
 
 function Video() {
-    const [videoInfo, setVideoInfo] = useState()
-    const [customError, setCustomError] = useState({
-        error : false,
-        message :""
-    })
+    const {video, loading, errorMessage} = useSelector((state) => state.videoInfos)
+    const dispatch = useDispatch()
 
     const [customCutList, setCustomCutList] = useState()
 
-
     const getDataVideo = async (_urlVideo) =>{
-        await fetch(`http://localhost:3500/api/getVideo/${_urlVideo}`, {
-            method:"GET"
-        })
-        .then(response => response.json())
-        .then((data) => {
-            if(data.message){
-                setCustomError({error : true, message: data.message})
-            }else{
-                setVideoInfo(data)
-                setCustomError({error : false, message:""})
-            }
-        })
-        .catch(e => {
+
+        try{
+            dispatch(getVideoByURL(_urlVideo))
+        }catch(e){
             console.error(e)
-            setVideoInfo({"url":_urlVideo})
-        });
+        }
     }
 
+    const handleSubmitCut = (_cutList) =>{
+        setCustomCutList(_cutList)
+    }
 
 
     return (
@@ -39,18 +30,19 @@ function Video() {
             <div className='searchBar'>
                 <Search onChangeVideo={getDataVideo}/>
             </div>
-            
-                {customError.error &&
+
+                {errorMessage.error &&
                 <div>
-                    {customError.message}
+                    {errorMessage.message}
                 </div>}
-            {videoInfo &&
+
+            {video.length > 0 &&
             <div className='main-video'>
                 <div className='customCutList'>
-                    <ListCutVideo customCutList={customCutList}/>
+                    <ListCutVideo cutList={customCutList} url={video.idUrl}/>
                 </div>
                 <div className='videoPlayer'>
-                    <LecteurVideo video={videoInfo}/>
+                    <LecteurVideo onSubmitCut={handleSubmitCut}/>
                 </div>
             </div>
             }

@@ -94,19 +94,13 @@ app.post("/api/cut/add", (req, res) => {
                 if(error) throw error
 
                 if(result[0]){
-                    let newDataSet = JSON.parse(result[0].dataSet)
-                    let newCutEntry = {title: "Texte de base", type:cut.type, begin:cut.timeCode.begin, end:cut.timeCode.end}
-
-                    newDataSet.push(newCutEntry)
-
-                    console.log(newDataSet)
-                    newDataSet = JSON.stringify(newDataSet)
                     // mettre ? à la place de newdataset et mettre la variable après
-                    bdd.query(`UPDATE skip SET dataSet = ? WHERE urlVideo = '${result[0].urlVideo}'`, newDataSet, (error, result) =>{
+                    bdd.query(`UPDATE skip SET dataSet = ? WHERE urlVideo = '${result[0].urlVideo}'`, JSON.stringify(cut.timeCode), (error, result) =>{
                         if(error) throw error;
 
                         if(result){
                             console.log("add")
+                            res.status(200).send({message:"Vos cuts ont bien été ajoutés !"})
                         }
                     })
                     // Modifier et ajouter les nouveaux skip

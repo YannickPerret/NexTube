@@ -5,14 +5,10 @@ import React, { useEffect, useState } from 'react';
 
 function AddCut(props) {
     const timeCode = props.event
-    const url = props.url
 
     const [isOnEdit, setIsOnEdit] = useState(false)
     const [popupIsShow, setPopupIsShow] = useState(false)
-    /*const [tempCut, setTempCut] = useState({
-        begin : null,
-        end : null
-    })*/
+
 
     useEffect(()=> {
         if(!localStorage.getItem("cut")){
@@ -23,65 +19,80 @@ function AddCut(props) {
 
     const handleIsOnEdit = () =>{
 
-        if(isOnEdit){
-            setIsOnEdit(false)
-            let temp = JSON.parse(localStorage.getItem('cut'))
-            temp.end = timeCode
-            localStorage.setItem('cut', JSON.stringify(temp))
+        let oldCut = []
+        let currentIndex = 0
+
+        if(localStorage.getItem('cut') !== "[object Object]"){
+            JSON.parse(localStorage.getItem('cut')).map(element => {
+                oldCut.push(element)
+            })
+        }
+
+        if(!isOnEdit){
+            setIsOnEdit(true)
+            oldCut.push({"begin":timeCode, "end":0, title:"", type:0})
+
+            localStorage.setItem('cut', JSON.stringify(oldCut))
         }
         else{
-            setIsOnEdit(true)
-            localStorage.setItem('cut', JSON.stringify({"begin":timeCode}))
+            setIsOnEdit(false)
+
+             oldCut.forEach((element, index) => {
+                 if(index + 1 === oldCut.length){
+                     currentIndex = index
+                     oldCut[index].end = timeCode
+                 }
+             })
+             localStorage.setItem('cut', JSON.stringify(oldCut))
         }
 
-    
-        let newCut = JSON.parse(localStorage.getItem('cut'))
-        if(newCut.begin && newCut.end){
-            showCutOption(newCut)
+        if(oldCut[currentIndex].begin > 0 && oldCut[currentIndex].end > 0 && currentIndex !== 0){
+            showCutOption(currentIndex)
         }
     }
 
-
-    const handleSubmitCut = async (cut, type) =>{
+    const showCutOption = (cutIndex) =>{
+        let cutList = JSON.parse(localStorage.getItem('cut'))
         let popup = document.querySelector('#popupConfirmation')
-        popup.innerHTML =""
-        setPopupIsShow(false)
-        //fetch pour update le cut in bdd
 
-        await fetch("http://127.0.0.1:3500/api/cut/add", {
-            method:"POST",
-            headers:{
-                'Content-Type': 'application/json',
-                'Accept':'application/json'
-            },
-            body: JSON.stringify({
-                url: url,
-                type: parseInt(type),
-                timeCode : cut
-            })
-        }).catch(e => console.error(e))
-    }
+        cutList.map((element, index) => {
+            if (index === cutIndex){
+                return popup.innerHTML = `
+                <form id="formCut">
+                    <label>Début* : </label><input type="text" value=${element.begin} name="beginTime" required />
+                    <label>Fin* : </label><input type="text" value=${element.end} name="endTime" required />
+                    <label>Type de cut* :</label> <input type="number" name="type" required/>
+                    <label>Résumé : </label> <textarea name="title"></textarea>
+                    <button>Ajouter</button>
+                </form>
+            `;
+            }
+        })
 
-    const showCutOption = (cut) =>{
-        let popup = document.querySelector('#popupConfirmation')
-        popup.innerHTML = `
-            <form id="formCut">
-                <label>Début* : </label><input type="text" value=${cut.begin} required />
-                <label>Fin* : </label><input type="text" value=${cut.end} required />
-                <label>Type de cut* :</label> <input type="number" name="type" required/>
-                <label>Résumé : </label> <textarea> </textarea>
-                <button>Ajouter</button>
-            </form>
-        `;
         setPopupIsShow(true)
 
         let form = document.querySelector('#formCut')
-        
         form.addEventListener("submit", (event) => {
             event.preventDefault()
-            //handleSubmitCut(cut, form.type.value)
-            props.onSubmitCut([{title:"test", type:form.type.value, begin: cut.begin, end: cut.end}])
 
+            cutList.map((element, index) =>{
+                if(index === cutIndex){
+                    element.title = form.title.value !== "undefined" ? form.title.value : null
+                    element.type = form.type.value
+                }
+            })
+
+            form.beginTime.value = ""
+            form.endTime.value = ""
+            form.type.value = ""
+            form.title.value = ""
+
+            localStorage.setItem('cut', JSON.stringify(cutList))
+
+            document.querySelector('#popupConfirmation').innerHTML = ""
+            setPopupIsShow(false)
+
+            props.onSubmitCut(cutList)
         })
     }
 

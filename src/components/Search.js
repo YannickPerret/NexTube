@@ -20,8 +20,9 @@ function Search(props) {
     return (
         <div>
             <form onSubmit={searchVideo}>
-            <label>Url de la vidéo : </label> <br />
+            <label>Search bar : </label> <br />
             <select name="plateforme">
+                <option value="Tous">All</option>
                 <option value="youtube">Youtube</option>
                 <option value="twitch">Twitch</option>
                 <option value="amazonVod">AmazonVideo</option>
