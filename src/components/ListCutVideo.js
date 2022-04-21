@@ -1,19 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCutsByUrl } from '../redux/CutReducer';
 
 function ListCutVideo(props) {
-    const [cutList, setCutList] = useState(JSON.parse(localStorage.getItem('cut')) || props.cutList)
 
-    const deleteCutInList = (element) =>{
+    const [cutList, setCutList] = useState(JSON.parse(localStorage.getItem('cut')) || props.cutList)
+    const {cutLists} = useSelector((state) => state.cutListInfo)
+    const dispatch = useDispatch()
+
+    useEffect (() => {
+        dispatch(getCutsByUrl("NC5N5n8wJxI"))
+        console.log(cutLists[0])
+
+    }, [])
+   /* const deleteCutInList = (element) =>{
         console.log("Delete item : ", element)
 
         setCutList(cutList.filter(item => item !== element))
         localStorage.setItem('cut', JSON.stringify(cutList))
 
         console.log(cutList)
-    }
+    }*/
 
 
-    const handleSubmitCutList = async () => {
+    /*const handleSubmitCutList = async () => {
 
         await fetch("http://127.0.0.1:3500/api/cut/add", {
             method:"POST",
@@ -31,11 +41,14 @@ function ListCutVideo(props) {
             localStorage.setItem('cut', {})
         })
         .catch(e => console.error(e))
-    }
+    }*/
 
     return (
         <div>
-            <div><h3>Sommaire ({cutList.length})</h3></div>
+            <div>
+                <h3>TimeLine ({cutList.length})</h3>
+                <span className='cutListContentCloose'>&nbsp;</span>
+            </div>
             <ul> 
             {cutList ?
             cutList.map((element, index) => {
@@ -43,7 +56,7 @@ function ListCutVideo(props) {
                     <div className='cutListContent'>
                         Titre : {element.title}<br /> Début : {element.begin} <br />Fin : {element.end}<br />Type : {element.type}
                     </div>
-                    <div className='cutListContentDelete' onClick={() => deleteCutInList(element)}>
+                    <div className='cutListContentDelete' /*onClick={() => deleteCutInList(element)}*/>
                         X
                     </div>
                    
@@ -52,7 +65,7 @@ function ListCutVideo(props) {
             </ul>
 
             <footer>
-                <button onClick={() => handleSubmitCutList()}> Valider mes ajouts</button>
+                <button /*onClick={() => handleSubmitCutList()}*/> Valider mes ajouts</button>
             </footer>
         </div>
     );

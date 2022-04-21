@@ -24,24 +24,107 @@ app.use(express.urlencoded({
 }))
 
 
-app.get("/api/getVideoBySearch/:search", async (req, res) => {
+app.get("/api/getVideoBySearch/:search", async(req, res) => {
 
     let {search} = req.params
+    let cutLists = {}
+    let videoList = {}
+    let idVideo = 0
+
     if(search){
-        bdd.query(`SELECT DISTINCT infovideo.* FROM infovideo WHERE title LIKE '%${search}%' OR url = '${search}'`, (error, result) => {
+        try{
+            let promise = new Promise((resolve, reject) => {
+                bdd.query(`SELECT DISTINCT infovideo.* FROM infovideo WHERE title LIKE '%${search}%' OR url = '${search}'`, async (error, result) => {
+                    if(error) 
+                        reject(error) 
+                    else{
+                        videoList = result
+                        //pour chaque vidéos selectionné
+                        result.forEach(async (row, i )=> {
+                            idVideo = row.url
+                            // Récupère tous la liste de tous les timeCut pour la vidéo, url
+                            await bdd.query(`SELECT * FROM skip WHERE urlVideo = '${row.url}' LIMIT 10;`, (error2, result2) => {
+                                if(error2) reject(error2) 
+                                    cutLists[idVideo] = result2
+                                if(i  == result.length - 1){
+                                    resolve()
+                                }
+                            })
+                        })
+
+                    }
+                })
+            }) 
+            promise.then(() => {
+                res.status(200).send({video:videoList, cutList:cutLists})
+            })
+            promise.catch(error => {throw(error)})
+        }
+        catch(e){
+            console.error(e)
+        }
+
+
+
+
+        
+
+       /*cutList = [
+            {"urlVideo1" : 
+                [
+                    {
+                        idcut : 1,
+                        begin :10,
+                        end : 15,
+                    },
+                    {
+                        idcut : 2,
+                        begin :10,
+                        end : 15,
+                    },
+                ],
+            },
+            {"urlVideo2" : 
+                [
+                    {
+                        idcut : 1,
+                        begin :10,
+                        end : 15,
+                    },
+                    {
+                        idcut : 2,
+                        begin :10,
+                        end : 15,
+                    },
+                ]
+            }
+       ]*/
+
+
+/*
             if(error){
                 throw error
             }
-
             if(result){
+                 result.forEach((element) => {
+                    cutList[element.url] = []
+                    bdd.query(`SELECT * FROM skip WHERE urlVideo = '${element.url}' LIMIT 10;`, (error, res) => {
+                        if(error) throw error
+                        if(res){
+                            console.log(res)
+                            cutList[element.url] = res
+                        }
+                    })
+                })
+                console.log(cutList)
+
                 res.status(200).send(result)
             }else{
                 res.status(200).send(null)
-            }
-        })
+            }*/
+       
     }
 })
-
 
 
 

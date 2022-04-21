@@ -25,45 +25,71 @@ header div img{
 .main {
     display : flex;
     flex-direction: column;
-    width: 100%;
-
+    align-items: center;
 }
 .searchBar{
     flex : 1;
-    width: 100%;
+    width: 33.9%;
     margin-bottom : 5vh;
 
     display: flex;
+    flex-direction: column;
     justify-content: center;
+}
+
+.searchBar form input{
+    width: 450px;
+    height: 45px;
+}
+.searchBar form button{
+    width: 200px;
+    height: 45px;
 }
 
 .searchBarResult{
     display : flex;
     flex-direction: column;
-
     background-color: white;
     color : black;
-    width: 550px; 
+    width: 450px; 
+    height: auto;
     font-size: 15px;
     padding : 10px 0;  
-    border-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
-.searchBarResult ul li{
+
+.searchBarResult li{
     padding : 7px 0;
     cursor: pointer;
     list-style: none;
-    
 }
+
+.searchBarResult ul ul{
+    width: 350px;
+    position: absolute;
+}
+
+.searchBarResult li li{
+    position: relative;
+    background-color: white;
+    
+    left: 449px;
+    top: -65px;
+}
+
 .searchBarResult ul li:hover{
     background: rgb(238, 237, 237);
     border : solid 1px black;
 }
 
 
+
+
 .main-video{
     display : flex;
     flex-direction: row;
-    max-width: 100;
+    width: 100%;
     justify-content: center;
 }
 .customCutList{
