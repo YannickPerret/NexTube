@@ -24,8 +24,12 @@ function Search(props) {
                 }
             }
 
-        if(userSearchText.length > 3){
+        if(userSearchText.length > 2){
             getVideoList()
+        }
+        else{
+            setListVideoByUserSearch()
+            setListCutVideo()
         }
     }, [userSearchText])
 
@@ -44,25 +48,27 @@ function Search(props) {
         <>
             <div className='searchBarInput'>
                 <form onSubmit={(event) => event.preventDefault()}>
-                    <input type="text" name='userSearchVideo' value={userSearchText} onChange={(e => setUserSearchTest(e.target.value))} placeholder='Rechercher'/>
+                    <input type="text" name='userSearchVideo' value={userSearchText} onChange={(e => setUserSearchTest(e.target.value))} placeholder='Rechercher' autoComplete='off'/>
                     <button type='submit'>Visionner</button>
                 </form>
             </div>
-            {listVideoByUserSearch.length > 0 && userSearchText.length > 3 &&
+
+            {listVideoByUserSearch && userSearchText.length > 3 &&
                 <div className='searchBarResult'>
                     <ul>
+
                         {listVideoByUserSearch.map((element) => {
-                                return (
-                                    <li key={element.id} onClick={() => onSearchVideo(element.url)} onMouseOver={() => setOnMouseOver(element.url)} onMouseOut={() => setOnMouseOver()}>
+                             return (
+                                    <li key={element.id} onClick={() => onSearchVideo(element.url)} onMouseOver={() => setOnMouseOver(element.url)} onMouseOut={() => setOnMouseOver(false)}>
                                         {element.idPlateforme === 1 && "YOUTUBE"}  |  {element.title} <br />
                                         {element.isEdit ? listCutVideo[element.url].length+" cut disponible" : "Créer votre timeLine de cut !"}
                                         
-                                        {onMouseOver && listCutVideo[element.url] && 
+                                        {onMouseOver && element.url === onMouseOver && 
                                             <ul> 
-                                                <li><h3>Custom TimeLine Cut {listCutVideo[element.url].length}</h3></li>
+                                                <li><h3>Custom TimeLine Cut {listCutVideo[onMouseOver].length}</h3></li>
                                                 {
-                                                    listCutVideo[element.url].map((subItem) => {
-                                                        return <li key={subItem.idSkip}>{subItem.title}</li>
+                                                    listCutVideo[onMouseOver].map((subItem) => {
+                                                        return <li key={subItem.idSkip} onClick={() => {console.log("terst")}}>{subItem.title}</li>
                                                     })
                                                 }
                                             </ul>

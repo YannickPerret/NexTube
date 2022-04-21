@@ -34,20 +34,24 @@ app.get("/api/getVideoBySearch/:search", async(req, res) => {
     if(search){
         try{
             let promise = new Promise((resolve, reject) => {
-                bdd.query(`SELECT DISTINCT infovideo.* FROM infovideo WHERE title LIKE '%${search}%' OR url = '${search}'`, async (error, result) => {
-                    if(error) 
-                        reject(error) 
-                    else{
+                bdd.query(`SELECT DISTINCT infovideo.* FROM infovideo WHERE title LIKE '%${search}%' OR url = '${search}'`, (error, result) => {
+                    if(error) reject(error) 
+                    if(result){
                         videoList = result
                         //pour chaque vidéos selectionné
-                        result.forEach(async (row, i )=> {
-                            idVideo = row.url
+                        result.forEach(async (row, i)=> {
                             // Récupère tous la liste de tous les timeCut pour la vidéo, url
-                            await bdd.query(`SELECT * FROM skip WHERE urlVideo = '${row.url}' LIMIT 10;`, (error2, result2) => {
-                                if(error2) reject(error2) 
-                                    cutLists[idVideo] = result2
-                                if(i  == result.length - 1){
-                                    resolve()
+                            bdd.query(`SELECT * FROM skip WHERE urlVideo = '${row.url}' LIMIT 10;`, (error2, result2) => {
+                                if (error2) reject(error2);
+
+                                if (result2[0]) {
+                                    cutLists[row.url] = result2;
+                                }
+                                else {
+                                    cutLists[row.url] = [];
+                                }
+                                if (i == result.length - 1) {
+                                    resolve();
                                 }
                             })
                         })
