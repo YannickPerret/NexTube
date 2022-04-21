@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from 'react';
 
 function Search(props) {
-    const [userSearchText, setUserSearchTest] = useState("")
+ 
     const [listVideoByUserSearch, setListVideoByUserSearch] = useState([])
-    const [onMouseOver, setOnMouseOver] = useState()
     const [listCutVideo, setListCutVideo] = useState()
 
 
+    const [userSearchText, setUserSearchTest] = useState("")
+    const [onMouseOver, setOnMouseOver] = useState()
+
+    const lengthInputSearch = 2
+
+
+
     useEffect(() => {
+
         const getVideoList = async () => {
                 try{
                     await fetch(`http://localhost:3500/api/getVideoBySearch/${userSearchText}`, {
@@ -17,14 +24,14 @@ function Search(props) {
                     .then(data => {
                        setListVideoByUserSearch(data.video)
                        setListCutVideo(data.cutList)
-                    })
+                    }) 
                 }
                 catch(e){
                     console.error(e)
                 }
             }
 
-        if(userSearchText.length > 2){
+        if(userSearchText.length > lengthInputSearch){
             getVideoList()
         }
         else{
@@ -34,14 +41,17 @@ function Search(props) {
     }, [userSearchText])
 
 
-   const onSearchVideo = (url) => {
-        try{
-            props.onChangeVideo(url)    
+
+   const onSearchVideoWithoutCut = (event, url) => {
+        if(event.target === event.currentTarget){
+            props.onChangeVideo(url, false)    
             setUserSearchTest("")
         }
-        catch(e){
-            console.error(e)
-        }
+    }
+
+    const onSearchVideoWithCut = (url, cutId) => {
+         props.onChangeVideo(url, cutId)
+         setUserSearchTest("")
     }
 
     return (
@@ -52,14 +62,14 @@ function Search(props) {
                     <button type='submit'>Visionner</button>
                 </form>
             </div>
-
-            {listVideoByUserSearch && userSearchText.length > 3 &&
+            
+            {listVideoByUserSearch && userSearchText.length > lengthInputSearch &&
                 <div className='searchBarResult'>
                     <ul>
 
                         {listVideoByUserSearch.map((element) => {
                              return (
-                                    <li key={element.id} onClick={() => onSearchVideo(element.url)} onMouseOver={() => setOnMouseOver(element.url)} onMouseOut={() => setOnMouseOver(false)}>
+                                    <li key={element.id} onClick={(event) => onSearchVideoWithoutCut(event, element.url)} onMouseOver={() => setOnMouseOver(element.url)} onMouseOut={() => setOnMouseOver(false)}>
                                         {element.idPlateforme === 1 && "YOUTUBE"}  |  {element.title} <br />
                                         {element.isEdit ? listCutVideo[element.url].length+" cut disponible" : "Créer votre timeLine de cut !"}
                                         
@@ -68,7 +78,7 @@ function Search(props) {
                                                 <li><h3>Custom TimeLine Cut {listCutVideo[onMouseOver].length}</h3></li>
                                                 {
                                                     listCutVideo[onMouseOver].map((subItem) => {
-                                                        return <li key={subItem.idSkip} onClick={() => {console.log("terst")}}>{subItem.title}</li>
+                                                        return <li key={subItem.idSkip} onClick={() => onSearchVideoWithCut(element.url, subItem.idSkip)}>{subItem.title}</li>
                                                     })
                                                 }
                                             </ul>

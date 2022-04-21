@@ -4,7 +4,7 @@ import YouTube from 'react-youtube';
 import AddCut from './AddCut';
 
 function LecteurVideo(props) {
-    const {video} = useSelector((state) => state.videoInfos)
+    const {video, cutLists} = useSelector((state) => state.videoInfos)
     const videoData = video[0]
 
     const [playerOptions, setPlayerOptions] = useState ({
@@ -19,14 +19,17 @@ function LecteurVideo(props) {
     const [timePlayed, setTimePlayed] = useState(0)
 
     const handleChangeState = (event) =>{
-         setInterval(() => {
-            setTimePlayed(Math.floor(event.target.getCurrentTime()))
-            videoData.dataSet.map(element => {
-                if(Math.floor(event.target.getCurrentTime()) === element.begin){
-                    event.target.seekTo(element.end, true)
-                }
-            })
-        }, 1000)
+
+        if (cutLists.lenght > 0){
+            setInterval(() => {
+                setTimePlayed(Math.floor(event.target.getCurrentTime()))
+                videoData.dataSet.map(element => {
+                    if(Math.floor(event.target.getCurrentTime()) === element.begin){
+                        event.target.seekTo(element.end, true)
+                    }
+                })
+            }, 1000)
+        }
     }
 
     const handleSubmitCut = (_cutList) =>{

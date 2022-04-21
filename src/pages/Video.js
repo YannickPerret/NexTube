@@ -6,22 +6,27 @@ import Search from '../components/search/Search';
 import { getVideoByURL } from '../redux/VideoReducer';
 
 function Video() {
-    const {video, loading, errorMessage} = useSelector((state) => state.videoInfos)
+    const {video, errorMessage} = useSelector((state) => state.videoInfos)
     const dispatch = useDispatch()
+
 
     const [customCutList, setCustomCutList] = useState()
 
-    const getDataVideo = async (_urlVideo) =>{
-
-        try{
-            dispatch(getVideoByURL(_urlVideo))
-        }catch(e){
-            console.error(e)
+    const getDataVideo = (urlVideo, idTimeLine) =>{
+        
+        if(idTimeLine){
+            console.log(idTimeLine)
+            //dispatch(getVideoByURLCutById(urlVideo, idTimeLine))
+        }
+        else{
+            dispatch(getVideoByURL(urlVideo))
         }
     }
 
     const handleSubmitCut = (_cutList) =>{
         setCustomCutList(_cutList)
+
+        //filtrer les cuts
     }
 
 
@@ -39,7 +44,8 @@ function Video() {
             {video.length > 0 &&
             <div className='main-video'>
                 <div className='customCutList'>
-                    <ListCutVideo cutList={customCutList} url={video.idUrl}/>
+                    {//<ListCutVideo cutList={customCutList} url={video.idUrl}/>
+}
                 </div>
                 <div className='videoPlayer'>
                     <LecteurVideo onSubmitCut={handleSubmitCut}/>

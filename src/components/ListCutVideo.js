@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCutsByUrl } from '../redux/CutReducer';
 
 function ListCutVideo(props) {
 
     const [cutList, setCutList] = useState(JSON.parse(localStorage.getItem('cut')) || props.cutList)
-    const {cutLists} = useSelector((state) => state.cutListInfo)
-    const dispatch = useDispatch()
+    //const dispatch = useDispatch()
 
     useEffect (() => {
-        dispatch(getCutsByUrl("NC5N5n8wJxI"))
-        console.log(cutLists[0])
+       // dispatch(getCutsByUrl("NC5N5n8wJxI"))
+        
 
     }, [])
    /* const deleteCutInList = (element) =>{
@@ -45,6 +43,7 @@ function ListCutVideo(props) {
 
     return (
         <div>
+            
             <div>
                 <h3>TimeLine ({cutList.length})</h3>
                 <span className='cutListContentCloose'>&nbsp;</span>

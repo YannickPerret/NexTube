@@ -29,7 +29,6 @@ app.get("/api/getVideoBySearch/:search", async(req, res) => {
     let {search} = req.params
     let cutLists = {}
     let videoList = {}
-    let idVideo = 0
 
     if(search){
         try{
@@ -67,107 +66,26 @@ app.get("/api/getVideoBySearch/:search", async(req, res) => {
         catch(e){
             console.error(e)
         }
-
-
-
-
-        
-
-       /*cutList = [
-            {"urlVideo1" : 
-                [
-                    {
-                        idcut : 1,
-                        begin :10,
-                        end : 15,
-                    },
-                    {
-                        idcut : 2,
-                        begin :10,
-                        end : 15,
-                    },
-                ],
-            },
-            {"urlVideo2" : 
-                [
-                    {
-                        idcut : 1,
-                        begin :10,
-                        end : 15,
-                    },
-                    {
-                        idcut : 2,
-                        begin :10,
-                        end : 15,
-                    },
-                ]
-            }
-       ]*/
-
-
-/*
-            if(error){
-                throw error
-            }
-            if(result){
-                 result.forEach((element) => {
-                    cutList[element.url] = []
-                    bdd.query(`SELECT * FROM skip WHERE urlVideo = '${element.url}' LIMIT 10;`, (error, res) => {
-                        if(error) throw error
-                        if(res){
-                            console.log(res)
-                            cutList[element.url] = res
-                        }
-                    })
-                })
-                console.log(cutList)
-
-                res.status(200).send(result)
-            }else{
-                res.status(200).send(null)
-            }*/
-       
     }
 })
 
 
 
-app.get("/api/getVideo/:slug",async (req, res) => {
+app.get("/api/getVideo/:url",async (req, res) => {
     try{
-        let {slug} = req.params
+        let {url} = req.params
 
-        if(slug){
-             bdd.query(`SELECT * FROM infovideo WHERE url = '${slug}'`, (error, result) => {
-                if (error){
-                    throw error
-                }
+        if(url){
+             bdd.query(`SELECT * FROM infovideo WHERE url = '${url}'`, (error, result) => {
+                if (error) throw error
 
                 if(result[0]){
-                    bdd.query(`SELECT infovideo.*, skip.dataSet 
-                    FROM infovideo INNER JOIN skip 
-                    ON skip.urlVideo = infovideo.url WHERE infovideo.id = ${result[0].id}`,(error, results) =>{
-                        if(error){
-                            throw  error
-                        }
-                        else if(!results[0].isEdit){
-                            res.status(400).send({message:"La vidéo n'a pas encore été modifié"})
-                        }
-                        if(results[0]){
 
-                            results[0].dataSet = JSON.parse(results[0].dataSet)
-
-                            res.status(200).send(results[0])
-                        }
-                        else{
-                            //Demander à l'utilisateur s'il veut la référencer
-                            res.status(400).send({message:"La vidéo n'a pas encore été modifié"})
-                        }
-                    })
+                    res.status(200).send(result[0])
                 }
-                else
-                {
-                    //utiliser une fonction pour référencier la videos
-                     res.status(400).send({message :"La vidéo n'est pas encore référencé, souhaitez-vous le faire pour gagner des crédits ?"})
+                else{
+                    //Demander à l'utilisateur s'il veut la référencer
+                    res.status(400).send({message:"La vidéo n'a pas encore été modifié"})
                 }
             })
         }
