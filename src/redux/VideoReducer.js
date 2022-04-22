@@ -7,6 +7,12 @@ export const getVideoByURL = createAsyncThunk("videoInfos/getVideoByURL", async 
     .catch(e => e)
 });
 
+export const getAllVideoBySearch = createAsyncThunk("videoInfos/getAllVideoBySearch", async (search) => {
+    return fetch(`http://localhost:3500/api/getAllVideoBySearch/${search}`, { method:"GET" })
+    .then((res) => res.json())
+})
+
+
 
 //CUT VIDEO 
 
@@ -17,10 +23,7 @@ export const getVideoByURL = createAsyncThunk("videoInfos/getVideoByURL", async 
     .then((res) => res.json())
 })
 
-export const getVideoBySearch = createAsyncThunk("videoInfos/getVideoBySearch", async (search) => {
-    return fetch(`http://localhost:3500/api/getVideoBySearch/${search}`, { method:"GET" })
-    .then((res) => res.json())
-})*/
+*/
 
 
 const INITIALSTATE = {
@@ -35,15 +38,31 @@ const videoSlice = createSlice({
     initialState: INITIALSTATE,
     reducers:{
 
-        updateVideoInfos: (state, action) => {
-            //{type : "videoInfos/updateVideoInfos"}
-        },
-
-        removeVideoInfos : (state, action) => {
-            //{type : "videoInfos/removeVideoInfos"}
-            state = state.filter(item => item.id !== action.payload)
+        getOneVideo: (state, action) => {
+            //type :  videoInfos/getOneVideo  payload : idVideo
+            state.video = state.video.filter(item => item.url === action.payload)
             return state
         },
+
+        getOneCut : (state, action) => {
+            //type :  videoInfos/getOneCut  payload : idCut 
+            console.log(state.cutLists)
+            state.cutLists = state.cutLists.filter(item => item.id === action.payload)
+
+            return state   
+        },
+
+        removeAllVideo: (state, action) => {
+            state.video = []
+
+            return state
+        },
+        removeAllCut : (state, action) => {
+            state.cutLists = []
+
+            return state
+        }
+
     },
     extraReducers: {
 
@@ -72,21 +91,21 @@ const videoSlice = createSlice({
         },
 
 
-        // CUT VIDEO
-        /*[getVideoBySearch.pending] : (state, action) => {
+   
+        [getAllVideoBySearch.pending] : (state, action) => {
             state.loading = true
         },
 
-        [getVideoBySearch.fulfilled] : (state, action) => {
+        [getAllVideoBySearch.fulfilled] : (state, action) => {
             state.loading = false
 
             state.video = action.payload.video
             state.cutLists = action.payload.cutList
         },
 
-        [getVideoBySearch.rejected] : (state, action) => {
+        [getAllVideoBySearch.rejected] : (state, action) => {
             state.loading = false
-        }*/
+        }
     },
 })
 

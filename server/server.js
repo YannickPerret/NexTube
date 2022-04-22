@@ -24,7 +24,7 @@ app.use(express.urlencoded({
 }))
 
 
-app.get("/api/getVideoBySearch/:search", async(req, res) => {
+app.get("/api/getAllVideoBySearch/:search", async(req, res) => {
 
     let {search} = req.params
     let cutLists = {}

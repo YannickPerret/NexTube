@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import LecteurVideo from '../components/LecteurVideo';
 import ListCutVideo from '../components/ListCutVideo';
 import Search from '../components/search/Search';
-import { getVideoByURL } from '../redux/VideoReducer';
+import { getAllVideoBySearch, getVideoByURL } from '../redux/VideoReducer';
 
 function Video() {
-    const {video, errorMessage} = useSelector((state) => state.videoInfos)
+    const {video} = useSelector((state) => state.videoInfos)
     const dispatch = useDispatch()
 
 
@@ -14,12 +14,13 @@ function Video() {
 
     const getDataVideo = (urlVideo, idTimeLine) =>{
         
+        dispatch({type:"videoInfos/getOneVideo", payload: urlVideo})
+
         if(idTimeLine){
-            console.log(idTimeLine)
-            //dispatch(getVideoByURLCutById(urlVideo, idTimeLine))
-        }
-        else{
-            dispatch(getVideoByURL(urlVideo))
+            // mettre dans la list des vidéos est cuts
+            // faire un find de l'id de vidéos et filtrer pour delete tous les autres
+            // faire un find de l'id de cut et fitler pour delete tous les autres 
+           dispatch({type:"videoInfos/getOneCut", payload: { url : urlVideo, idCut : idTimeLine}})
         }
     }
 
@@ -36,12 +37,7 @@ function Video() {
                 <Search onChangeVideo={getDataVideo}/>
             </div>
 
-                {errorMessage.error &&
-                <div>
-                    {errorMessage.message}
-                </div>}
-
-            {video.length > 0 &&
+            {video.length === 1 &&
             <div className='main-video'>
                 <div className='customCutList'>
                     {//<ListCutVideo cutList={customCutList} url={video.idUrl}/>
