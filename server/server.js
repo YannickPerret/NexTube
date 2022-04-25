@@ -24,6 +24,39 @@ app.use(express.urlencoded({
 }))
 
 
+app.get('/api/getOneVideo/:url/:idTimeLine?', async(req, res) => {
+
+    const {url, idTimeLine} = req.params
+    try {
+        if(url){
+            bdd.query(`SELECT * from infovideo where url = '${url}'`, (error, result) => {
+                if(error) throw error
+
+                if(result[0]){
+                    if(idTimeLine != "false"){
+
+                        bdd.query(`SELECT * from skip WHERE idSkip = ${idTimeLine} AND urlVideo = '${url}'`, (error2, result2) => {
+                            if (error2) throw error2
+                            
+                            if(result2[0]){
+                                res.status(200).send({video:result[0], timeLine:result2[0]})
+                            }
+                        })
+                    }
+                    else{
+                        res.status(200).send({video:result[0]})
+                    }
+                }
+            })
+        }
+    }
+    catch(e){
+        console.log(e)
+        res.send(400).send(e)
+    }    
+})
+
+
 app.get("/api/getAllVideoBySearch/:search", async(req, res) => {
 
     let {search} = req.params

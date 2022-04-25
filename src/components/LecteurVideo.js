@@ -6,6 +6,9 @@ import AddCut from './AddCut';
 function LecteurVideo(props) {
     const {video, cutLists} = useSelector((state) => state.videoInfos)
     const videoData = video[0]
+    const timeLine = cutLists[0]
+    const [timePlayed, setTimePlayed] = useState(0)
+
 
     const [playerOptions, setPlayerOptions] = useState ({
         height : '720',
@@ -16,14 +19,12 @@ function LecteurVideo(props) {
     })
 
 
-    const [timePlayed, setTimePlayed] = useState(0)
-
     const handleChangeState = (event) =>{
 
-        if (cutLists.lenght > 0){
+        if (timeLine.dataSet.length > 0){
             setInterval(() => {
                 setTimePlayed(Math.floor(event.target.getCurrentTime()))
-                videoData.dataSet.map(element => {
+                timeLine.dataSet.map(element => {
                     if(Math.floor(event.target.getCurrentTime()) === element.begin){
                         event.target.seekTo(element.end, true)
                     }
@@ -35,6 +36,8 @@ function LecteurVideo(props) {
     const handleSubmitCut = (_cutList) =>{
         props.onSubmitCut(_cutList)
     }
+
+
 
     return (
         <>

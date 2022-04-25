@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { formatTime }  from '../Helpers/Function';
 
 function ListCutVideo(props) {
 
-    const [cutList, setCutList] = useState(JSON.parse(localStorage.getItem('cut')) || props.cutList)
+    const {cutLists} = useSelector((state) => state.videoInfos)
+
+    const [localCutList, setLocalCutList] = useState(JSON.parse(localStorage.getItem('cut')) || [])
     //const dispatch = useDispatch()
 
-    useEffect (() => {
-       // dispatch(getCutsByUrl("NC5N5n8wJxI"))
-        
-
-    }, [])
    /* const deleteCutInList = (element) =>{
         console.log("Delete item : ", element)
 
@@ -43,29 +41,47 @@ function ListCutVideo(props) {
 
     return (
         <div>
-            
             <div>
-                <h3>TimeLine ({cutList.length})</h3>
+                <h3>TimeLine {cutLists.length > 0 && "("+cutLists[0].dataSet.length+")"}</h3>
                 <span className='cutListContentCloose'>&nbsp;</span>
             </div>
-            <ul> 
-            {cutList ?
-            cutList.map((element, index) => {
-                return(<li key={index}>
-                    <div className='cutListContent'>
-                        Titre : {element.title}<br /> Début : {element.begin} <br />Fin : {element.end}<br />Type : {element.type}
-                    </div>
-                    <div className='cutListContentDelete' /*onClick={() => deleteCutInList(element)}*/>
-                        X
-                    </div>
-                   
+            {cutLists.length > 0 ?
+            <>
+                <ul> 
+                    <h4>En cours d'édition</h4>
+                    {localCutList.map((customTime, index) => {
+                        return(<li key={index}> 
+                            <div className='cutListContent orange'>
+                                Titre : {customTime.title}<br /> De {formatTime(customTime.begin)} à {formatTime(customTime.end)}
+                            </div>
+                            <div className='cutListContentDelete' /*onClick={() => deleteCutInList(element)}*/>
+                                X
+                            </div>
                         </li>)
-            }): <li>Vous n'avez pas encore ajouter de cut</li>}
-            </ul>
+                    })}
 
-            <footer>
-                <button /*onClick={() => handleSubmitCutList()}*/> Valider mes ajouts</button>
-            </footer>
+                    <h4>Validés</h4>
+                    {cutLists[0].dataSet.map((element, index) => {
+                        return(<li key={index}> 
+                                <div className='cutListContent green'>
+
+                                    Titre : {element.title}<br /> De {formatTime(element.begin)} à {formatTime(element.end)}
+                                </div>
+                                <div className='cutListContentDelete' /*onClick={() => deleteCutInList(element)}*/>
+                                    X
+                                </div>
+                            </li>)
+                    })}
+                </ul>
+
+                <footer>
+                    <button /*onClick={() => handleSubmitCutList()}*/> Valider mes ajouts</button>
+                </footer>
+            </>
+            : <h3>Cette vidéo ne contient pas encore de cut</h3> }
+            
+
+            
         </div>
     );
 }

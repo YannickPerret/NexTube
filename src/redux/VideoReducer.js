@@ -1,29 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 //VIDEO INFORMATIONS
-export const getVideoByURL = createAsyncThunk("videoInfos/getVideoByURL", async (url) => {
-    return fetch(`http://localhost:3500/api/getVideo/${url}`, { method:"GET" })
+export const getOneVideo = createAsyncThunk("videoInfos/getOneVideo", async (video) => {
+      return fetch(`http://localhost:3500/api/getOneVideo/${video.url}/${video.idTimeLine}`, { method:"GET" })
     .then((res) => res.json())
-    .catch(e => e)
+    .catch(e => console.error(e))
 });
+
 
 export const getAllVideoBySearch = createAsyncThunk("videoInfos/getAllVideoBySearch", async (search) => {
     return fetch(`http://localhost:3500/api/getAllVideoBySearch/${search}`, { method:"GET" })
     .then((res) => res.json())
 })
-
-
-
-//CUT VIDEO 
-
-
-
-/*export const getCutsByUrl = createAsyncThunk("videoInfos/getCutsByUrl", async (url) => {
-    return fetch(`http://localhost:3500/api/getCutByUrl/${url}`, { method:"GET" })
-    .then((res) => res.json())
-})
-
-*/
 
 
 const INITIALSTATE = {
@@ -37,20 +25,6 @@ const videoSlice = createSlice({
     name: 'videoInfos',
     initialState: INITIALSTATE,
     reducers:{
-
-        getOneVideo: (state, action) => {
-            //type :  videoInfos/getOneVideo  payload : idVideo
-            state.video = state.video.filter(item => item.url === action.payload)
-            return state
-        },
-
-        getOneCut : (state, action) => {
-            //type :  videoInfos/getOneCut  payload : idCut 
-            console.log(state.cutLists)
-            state.cutLists = state.cutLists.filter(item => item.id === action.payload)
-
-            return state   
-        },
 
         removeAllVideo: (state, action) => {
             state.video = []
@@ -66,25 +40,39 @@ const videoSlice = createSlice({
     },
     extraReducers: {
 
-        //VIDEO INFO
-        [getVideoByURL.pending]: (state, action) => {
+        [getOneVideo.pending]: (state, action) => {
             state.loading = true;
         },
 
-        [getVideoByURL.fulfilled]: (state, action) => {
+        [getOneVideo.fulfilled]: (state, action) => {
             state.loading = false
 
-            const addNewVideo = {
-                idUrl: action.payload.url,
-                idPlateformProvider : action.payload.idPlateforme,
-                isEdit : action.payload.isEdit,
-                title : action.payload.title,
-                dataSet : action.payload.dataSet
-            };
-            state.video.push(addNewVideo)
+            const addNewVideo = [{
+                idUrl: action.payload.video.url,
+                idPlateformProvider : action.payload.video.idPlateforme,
+                isEdit : action.payload.video.isEdit,
+                title : action.payload.video.title,
+                dataSet : action.payload.video.dataSet,
+            }];
+            state.video = addNewVideo
+
+
+            if(action.payload.timeLine){
+                const addNewCutTimeline = [{
+                    id: action.payload.timeLine.idSkip,
+                    url: action.payload.timeLine.urlVideo,
+                    idUser : action.payload.timeLine.idUser,
+                    title: action.payload.timeLine.title,
+                    dataSet : JSON.parse(action.payload.timeLine.dataSet),
+                }];
+                state.cutLists = addNewCutTimeline
+
+            }
+            
         },
 
-        [getVideoByURL.rejected]: (state, action) => {
+        [getOneVideo.rejected]: (state, action) => {
+            console.log("test3")
             state.loading = false;
             state.errorMessage.error = true
             state.errorMessage.message = action.payload

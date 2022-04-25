@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import LecteurVideo from '../components/LecteurVideo';
 import ListCutVideo from '../components/ListCutVideo';
 import Search from '../components/search/Search';
-import { getAllVideoBySearch, getVideoByURL } from '../redux/VideoReducer';
+import { getOneVideo } from '../redux/VideoReducer';
 
 function Video() {
     const {video} = useSelector((state) => state.videoInfos)
@@ -13,15 +13,12 @@ function Video() {
     const [customCutList, setCustomCutList] = useState()
 
     const getDataVideo = (urlVideo, idTimeLine) =>{
-        
-        dispatch({type:"videoInfos/getOneVideo", payload: urlVideo})
-
-        if(idTimeLine){
             // mettre dans la list des vidéos est cuts
             // faire un find de l'id de vidéos et filtrer pour delete tous les autres
             // faire un find de l'id de cut et fitler pour delete tous les autres 
-           dispatch({type:"videoInfos/getOneCut", payload: { url : urlVideo, idCut : idTimeLine}})
-        }
+            dispatch({type:"videoInfos/removeAllVideo"})
+
+           dispatch(getOneVideo({url : urlVideo, idTimeLine : idTimeLine}))
     }
 
     const handleSubmitCut = (_cutList) =>{
@@ -37,17 +34,21 @@ function Video() {
                 <Search onChangeVideo={getDataVideo}/>
             </div>
 
-            {video.length === 1 &&
-            <div className='main-video'>
-                <div className='customCutList'>
-                    {//<ListCutVideo cutList={customCutList} url={video.idUrl}/>
-}
+            {video.length === 1 && 
+            <>
+                <h2>{video[0].title}</h2>
+
+                <div className='main-video'>
+                    <div className='customCutList'>
+                        {<ListCutVideo /> }
+                    </div>
+                    <div className='videoPlayer'>
+                        <LecteurVideo onSubmitCut={handleSubmitCut}/>
+                    </div>
                 </div>
-                <div className='videoPlayer'>
-                    <LecteurVideo onSubmitCut={handleSubmitCut}/>
-                </div>
-            </div>
-            }
+                
+            </>
+            }        
 
         </div>
     );
