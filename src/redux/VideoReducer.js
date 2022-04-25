@@ -17,6 +17,7 @@ export const getAllVideoBySearch = createAsyncThunk("videoInfos/getAllVideoBySea
 const INITIALSTATE = {
     video : [],
     cutLists : [],
+    cutListsTemps : [],
     loading : false,
     errorMessage:{error : false, message : ""},
 }
@@ -26,11 +27,27 @@ const videoSlice = createSlice({
     initialState: INITIALSTATE,
     reducers:{
 
+
         removeAllVideo: (state, action) => {
             state.video = []
 
             return state
         },
+
+        AddCutToListTemps : (state, action) => {
+
+            //if(!state.cutListsTemps.includes(action.payload)){
+                const addNewCutTimeline = {
+                    title: action.payload.title,
+                    begin : action.payload.begin,
+                    end: action.payload.end,
+                    state : 2,
+                };
+                console.log("test")
+                state.cutLists.push(addNewCutTimeline)
+            //}
+        },
+
         removeAllCut : (state, action) => {
             state.cutLists = []
 
@@ -64,6 +81,7 @@ const videoSlice = createSlice({
                     idUser : action.payload.timeLine.idUser,
                     title: action.payload.timeLine.title,
                     dataSet : JSON.parse(action.payload.timeLine.dataSet),
+                    isLive : action.payload.timeLine.isLive,
                 }];
                 state.cutLists = addNewCutTimeline
 
@@ -72,7 +90,6 @@ const videoSlice = createSlice({
         },
 
         [getOneVideo.rejected]: (state, action) => {
-            console.log("test3")
             state.loading = false;
             state.errorMessage.error = true
             state.errorMessage.message = action.payload

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import YouTube from 'react-youtube';
 import AddCut from './AddCut';
@@ -18,9 +18,7 @@ function LecteurVideo(props) {
         }
     })
 
-
     const handleChangeState = (event) =>{
-
         if (timeLine.dataSet.length > 0){
             setInterval(() => {
                 setTimePlayed(Math.floor(event.target.getCurrentTime()))

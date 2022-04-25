@@ -134,6 +134,27 @@ app.get("/api/getVideo/:url",async (req, res) => {
 })
 
 
+app.post("/api/timeLine/addCut", (req, res) => {
+
+    const {timeLine, isLive} = req.body
+
+    if(timeLine){
+        timeLine.map((element) => {
+            if(isLive){
+                bdd.query(`UPDATE skip SET `)
+
+            }
+            else{
+                
+            }
+        })
+    }
+
+    // Doit gérer 1 ou plusieurs cut
+    // Doit flag si c'est en draft ou en publié
+})
+
+
 //Ajouter un cut pour une vidéo
 app.post("/api/cut/add", (req, res) => {
     //changer title pour résumé

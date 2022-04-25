@@ -16,7 +16,7 @@ header{
     color : white;
     display : flex;
     justify-content: space-between;
-    height: 75px;
+    height: 40px;
     margin-bottom : 5vh;
 }
 header div img{
@@ -42,10 +42,15 @@ header div img{
 .searchBar form input{
     width: 70%;
     height: 45px;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    padding-left: 25px;
 }
 .searchBar form button{
     width: 30%;
     height: 45px;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
 }
 
 .searchBarResult{
@@ -120,7 +125,6 @@ header div img{
     max-height: 700px;
 }
 .customCutList ul li{
-    background-color: rgb(243, 237, 237);
     color : black;
     font-size: 17px;
     border : 1px solid #000;

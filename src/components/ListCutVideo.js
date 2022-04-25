@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { formatTime }  from '../Helpers/Function';
 
 function ListCutVideo(props) {
 
-    const {cutLists} = useSelector((state) => state.videoInfos)
+    const {video, cutLists, cutListsTemps} = useSelector((state) => state.videoInfos)
 
     const [localCutList, setLocalCutList] = useState(JSON.parse(localStorage.getItem('cut')) || [])
-    //const dispatch = useDispatch()
+    const dispatch = useDispatch()
+
 
    /* const deleteCutInList = (element) =>{
         console.log("Delete item : ", element)
@@ -18,6 +19,22 @@ function ListCutVideo(props) {
         console.log(cutList)
     }*/
 
+    /*useEffect(() => {
+
+        console.log(localCutList.findIndex(video[0].idUrl))
+
+        localCutList.map((element) => {
+
+            console.log(element)
+
+            //if(element.indexOf(video[0].idUrl) === -1){
+              //  console.log(element[video[0].idUrl])
+               // dispatch({type:"videoInfos/AddCutToListTemps", payload : element[video[0].idUrl]})
+           // }
+        })
+
+        console.log(cutListsTemps)
+    }, [localCutList])*/
 
     /*const handleSubmitCutList = async () => {
 
@@ -75,7 +92,7 @@ function ListCutVideo(props) {
                 </ul>
 
                 <footer>
-                    <button /*onClick={() => handleSubmitCutList()}*/> Valider mes ajouts</button>
+                    <button /*onClick={() => handleSubmitCutList()}*/> Valider modification de la timeline</button>
                 </footer>
             </>
             : <h3>Cette vidéo ne contient pas encore de cut</h3> }

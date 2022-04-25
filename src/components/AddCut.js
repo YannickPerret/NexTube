@@ -19,6 +19,8 @@ function AddCut(props) {
 
     const handleIsOnEdit = () =>{
 
+        let temps = []
+
         let oldCut = []
         let currentIndex = 0
 
