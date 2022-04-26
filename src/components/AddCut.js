@@ -1,86 +1,72 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 //Tester que le cut de fin ne soit pas plus petit que le cut de début
 
-
 function AddCut(props) {
     const timeCode = props.event
+    const {video, cutLists, localCutList} = useSelector((state) => state.videoInfos)
 
     const [isOnEdit, setIsOnEdit] = useState(false)
     const [popupIsShow, setPopupIsShow] = useState(false)
 
-
-    useEffect(()=> {
-        if(!localStorage.getItem("cut")){
-            localStorage.setItem("cut", {})
-        }
-
-    })
+    const dispatch = useDispatch()
 
     const handleIsOnEdit = () =>{
-
-        let temps = []
-
-        let oldCut = []
         let currentIndex = 0
-
-        if(localStorage.getItem('cut') !== "[object Object]"){
-            JSON.parse(localStorage.getItem('cut')).map(element => {
-                oldCut.push(element)
-            })
-        }
 
         if(!isOnEdit){
             setIsOnEdit(true)
-            oldCut.push({"begin":timeCode, "end":0, title:"", type:0})
 
-            localStorage.setItem('cut', JSON.stringify(oldCut))
+            dispatch({type:"videoInfos/addToLocalCutlist", payload :{"begin":timeCode, "end":0, title:"", type:0}})
         }
         else{
+
             setIsOnEdit(false)
 
-             oldCut.forEach((element, index) => {
-                 if(index + 1 === oldCut.length){
-                     currentIndex = index
-                     oldCut[index].end = timeCode
-                 }
-             })
-             localStorage.setItem('cut', JSON.stringify(oldCut))
+            currentIndex = localCutList.length -1
+
+            dispatch({type:"videoInfos/updateLocalCutList", payload : {"id": currentIndex, "end": timeCode}})
+            console.log("test1")
         }
+        
 
-        if(oldCut[currentIndex].begin > 0 && oldCut[currentIndex].end > 0 && currentIndex !== 0){
-            showCutOption(currentIndex)
-        }
-    }
+        console.log(localCutList[currentIndex].begin, localCutList[currentIndex].end)
 
-    const showCutOption = (cutIndex) =>{
-        let cutList = JSON.parse(localStorage.getItem('cut'))
-        let popup = document.querySelector('#popupConfirmation')
+        if(localCutList[currentIndex].begin > 0 && localCutList[currentIndex].end > 0){
+            console.log("test")
+            //dispatch({type:"videoInfos/addToLocalCutlist", payload: oldCut})
+            const popup = document.querySelector('#popupConfirmation')
+/*
+            oldCut.map((element, index) => {
+                if (index === currentIndex){
+                    return popup.innerHTML = `
+                    <form id="formCut">
+                        <label>Début* : </label><input type="text" value=${element.begin} name="beginTime" required />
+                        <label>Fin* : </label><input type="text" value=${element.end} name="endTime" required />
+                        <label>Type de cut* :</label> <input type="number" name="type" required/>
+                        <label>Résumé : </label> <textarea name="title"></textarea>
+                        <button>Ajouter</button>
+                    </form>
+                `;
+                }
+            })
 
-        cutList.map((element, index) => {
-            if (index === cutIndex){
-                return popup.innerHTML = `
-                <form id="formCut">
-                    <label>Début* : </label><input type="text" value=${element.begin} name="beginTime" required />
-                    <label>Fin* : </label><input type="text" value=${element.end} name="endTime" required />
-                    <label>Type de cut* :</label> <input type="number" name="type" required/>
-                    <label>Résumé : </label> <textarea name="title"></textarea>
-                    <button>Ajouter</button>
-                </form>
-            `;
-            }
-        })
+            const form = document.querySelector('#formCut')
 
-        setPopupIsShow(true)
-
-        let form = document.querySelector('#formCut')
-        form.addEventListener("submit", (event) => {
+            form.addEventListener("submit", (event) => {
             event.preventDefault()
 
-            cutList.map((element, index) =>{
-                if(index === cutIndex){
-                    element.title = form.title.value !== "undefined" ? form.title.value : null
-                    element.type = form.type.value
+            oldCut.map((element, index) =>{
+                if(index === currentIndex){
+                    oldCut[index] = [(old) => [...old, {title : form.title.value !== "undefined" ? form.title.value : null}]]
+                    
+                   // {...oldCut[index], title = form.title.value !== "undefined" ? form.title.value : null}
+
+
+
+                    //element.title = form.title.value !== "undefined" ? form.title.value : null
+                    //element.type = form.type.value
                 }
             })
 
@@ -89,13 +75,26 @@ function AddCut(props) {
             form.type.value = ""
             form.title.value = ""
 
-            localStorage.setItem('cut', JSON.stringify(cutList))
+            //localStorage.setItem('cut', JSON.stringify(cutList))
 
             document.querySelector('#popupConfirmation').innerHTML = ""
             setPopupIsShow(false)
 
-            props.onSubmitCut(cutList)
-        })
+            props.onSubmitCut(oldCut)
+        })*/
+
+        }
+    }
+
+
+
+
+    const showCutOption = (cutIndex) =>{
+        let tempLocalcut = localCutList
+
+        console.log(tempLocalcut)
+        
+        
     }
 
     return (

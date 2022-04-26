@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 
 //VIDEO INFORMATIONS
 export const getOneVideo = createAsyncThunk("videoInfos/getOneVideo", async (video) => {
@@ -17,7 +17,7 @@ export const getAllVideoBySearch = createAsyncThunk("videoInfos/getAllVideoBySea
 const INITIALSTATE = {
     video : [],
     cutLists : [],
-    cutListsTemps : [],
+    localCutList : [],
     loading : false,
     errorMessage:{error : false, message : ""},
 }
@@ -34,18 +34,19 @@ const videoSlice = createSlice({
             return state
         },
 
-        AddCutToListTemps : (state, action) => {
+        addToLocalCutlist : (state, action) => {
+            state.localCutList.push(action.payload)
+        },
 
-            //if(!state.cutListsTemps.includes(action.payload)){
-                const addNewCutTimeline = {
-                    title: action.payload.title,
-                    begin : action.payload.begin,
-                    end: action.payload.end,
-                    state : 2,
-                };
-                console.log("test")
-                state.cutLists.push(addNewCutTimeline)
-            //}
+        updateLocalCutList : (state, action) => {
+            state.localCutList.map((element, i) => {
+                if (i === action.payload.id) {
+                    element.end = action.payload.end
+                } 
+            })
+
+            console.log(current(state))
+            return state
         },
 
         removeAllCut : (state, action) => {

@@ -5,7 +5,9 @@
 }
 
 
-
+p{
+    color : black;
+}
 
 body {
     width: 100%;
@@ -107,22 +109,30 @@ header div img{
     width: 100%;
     justify-content: center;
 }
+
 .customCutList{
-    flex:1;
-    max-width: 250px;
     display : flex;
+    flex-direction: column;
+
+    max-width: 250px;
     background-color: #fff;
 }
+.customCutList> div {
+    border-bottom : solid black 1px;
+    height: 100px;
+}
+
 .customCutList h3, .customCutList h4{
     color : black;
 }
+
 .customCutList ul{
     display : flex;
     flex-direction: column;
     gap:5px;
     overflow: auto;
-    height: auto;
     max-height: 700px;
+    margin-top : 3vh
 }
 .customCutList ul li{
     color : black;

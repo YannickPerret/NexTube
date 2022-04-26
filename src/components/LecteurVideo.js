@@ -38,7 +38,7 @@ function LecteurVideo(props) {
 
 
     return (
-        <>
+        <div className='videoPlayer'>
             <YouTube
             videoId={videoData.idUrl} 
             opts={playerOptions}
@@ -47,7 +47,7 @@ function LecteurVideo(props) {
             /> 
 
             <AddCut event={timePlayed} url={videoData.url} onSubmitCut={handleSubmitCut}/>
-        </> 
+        </div> 
     );
 }
 

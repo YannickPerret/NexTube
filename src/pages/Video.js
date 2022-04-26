@@ -39,12 +39,8 @@ function Video() {
                 <h2>{video[0].title}</h2>
 
                 <div className='main-video'>
-                    <div className='customCutList'>
-                        {<ListCutVideo /> }
-                    </div>
-                    <div className='videoPlayer'>
+                        <ListCutVideo /> 
                         <LecteurVideo onSubmitCut={handleSubmitCut}/>
-                    </div>
                 </div>
                 
             </>
