@@ -182,14 +182,17 @@ header div img{
   top: 0;
   left: 0;
 }
-
-.playerAddCut{
-    width: 100%;
-    height: 100px;
+.popupSetTimeline{
+    max-width: 1200px;
+    font-size: 20px;
 }
-.playerAddCut button {
-    width: 200px;
-    height: 35%;
-    border-radius: 10px;
-    text-transform: uppercase;
+.popupSetTimeline form {
+    display : flex;
+    flex-direction: column;
+}
+
+.popupSetTimeline form > button{
+    align-self: center;
+    width: 225px;
+    height: 45px;
 }

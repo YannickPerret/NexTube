@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { formatTime }  from '../Helpers/Function';
 
 function ListCutVideo(props) {
 
-    const {video, cutLists, localCutList} = useSelector((state) => state.videoInfos)
+    const {cutLists, localCutList} = useSelector((state) => state.videoInfos)
 
     //const [localCutList, setLocalCutList] = useState([])
     //const dispatch = useDispatch()
+
 
 
    /* const deleteCutInList = (element) =>{
@@ -18,6 +19,7 @@ function ListCutVideo(props) {
 
         console.log(cutList)
     }*/
+
 
 
     /*const handleSubmitCutList = async () => {
@@ -44,87 +46,89 @@ function ListCutVideo(props) {
 
 
     //si le cut appartient à l'utilisateur ou non
-    if(cutLists[0].idUser === 1){
+    if(cutLists[0]){
+        if(cutLists[0].idUser === 1){
 
-        return (
-            <div className='customCutList'>
-                <div>
-                    <h3>TimeLine {cutLists.length > 0 && "("+cutLists[0].dataSet.length+")"}</h3>
-                </div>
-                
-
-                {localCutList.length > 0 || cutLists.length > 0 ?
-                    <>
-                        <ul> 
-                            {localCutList.length > 0 &&
-                            <>
-                                <h4>En cours d'édition</h4>
-
-                                {localCutList.map((customTime, index) => {
-                                    return(<li key={index}> 
-                                        <div className='cutListContent orange'>
-                                            Titre : {customTime.title}<br /> De {formatTime(customTime.begin)} à {formatTime(customTime.end)}
-                                        </div>
-                                        <div className='cutListContentDelete' /*onClick={() => deleteCutInList(element)}*/>
-                                            X
-                                        </div>
-                                    </li>)
-                                })}
-                            </>
-                            }
+            return (
+                <div className='customCutList'>
+                    <div>
+                        <h3>TimeLine {cutLists.length > 0 && "("+cutLists[0].dataSet.length+")"}</h3>
+                    </div>
+                    
     
-                            {cutLists.length > 0 &&
-                            <>
-                                <h4>Validés</h4>
-                                    {cutLists[0].dataSet.map((element, index) => {
+                    {localCutList.length > 0 || cutLists.length > 0 ?
+                        <>
+                            <ul> 
+                                {localCutList.length > 0 &&
+                                <>
+                                    <h4>En cours d'édition</h4>
+    
+                                    {localCutList.map((customTime, index) => {
                                         return(<li key={index}> 
-                                                <div className='cutListContent green'>
-                
-                                                    Titre : {element.title}<br /> De {formatTime(element.begin)} à {formatTime(element.end)}
-                                                </div>
-                                                <div className='cutListContentDelete' /*onClick={() => deleteCutInList(element)}*/>
-                                                    X
-                                                </div>
-                                            </li>)
+                                            <div className='cutListContent orange'>
+                                                Titre : {customTime.title}<br /> De {formatTime(customTime.begin)} à {formatTime(customTime.end)}
+                                            </div>
+                                            <div className='cutListContentDelete' /*onClick={() => deleteCutInList(element)}*/>
+                                                X
+                                            </div>
+                                        </li>)
                                     })}
-                            </>   
-                            }
-                        </ul>
+                                </>
+                                }
         
-                        <footer>
-                            <button /*onClick={() => handleSubmitCutList()}*/> Valider modification de la timeline</button>
-                        </footer>
-                    </>
-
-                    //Sinon 
-                : <h3>Cette vidéo ne contient pas encore de cut</h3> }
-                
+                                {cutLists.length > 0 &&
+                                <>
+                                    <h4>Validés</h4>
+                                        {cutLists[0].dataSet.map((element, index) => {
+                                            return(<li key={index}> 
+                                                    <div className='cutListContent green'>
+                    
+                                                        Titre : {element.title}<br /> De {formatTime(element.begin)} à {formatTime(element.end)}
+                                                    </div>
+                                                    <div className='cutListContentDelete' /*onClick={() => deleteCutInList(element)}*/>
+                                                        X
+                                                    </div>
+                                                </li>)
+                                        })}
+                                </>   
+                                }
+                            </ul>
+            
+                            <footer>
+                                <button /*onClick={() => handleSubmitCutList()}*/> Valider modification de la timeline</button>
+                            </footer>
+                        </>
     
-                
-            </div>
-        );
-    }
-    else{
-
-        return (
-            //Ajouter un indicateur pour savoir quel cut va arriver
-            <div className='customCutList'>
-                <div>
-                    <h3>TimeLine {cutLists.length > 0 && "("+cutLists[0].dataSet.length+")"}</h3>
-                    <p>Créer par {cutLists[0].idUser}</p>
+                        //Sinon 
+                    : <h3>Cette vidéo ne contient pas encore de cut</h3> }
+                    
+        
+                    
                 </div>
-
-                <ul>
-                    {cutLists[0].dataSet.map((element, index) => {
-                        return(<li key={index}> 
-                                <div className='cutListContent'>
-                                    Titre : {element.title}<br /> De {formatTime(element.begin)} à {formatTime(element.end)}
-                                </div>
-                            </li>)
-                        })}
-                </ul>
-            </div>
-        )
+            );
+        }
+        else{
+    
+            return (
+                //Ajouter un indicateur pour savoir quel cut va arriver
+                <div className='customCutList'>
+                    <div>
+                        <h3>TimeLine {cutLists.length > 0 && "("+cutLists[0].dataSet.length+")"}</h3>
+                        <p>Créer par {cutLists[0].idUser}</p>
+                    </div>
+    
+                    <ul>
+                        {cutLists[0].dataSet.map((element, index) => {
+                            return(<li key={index}> 
+                                    <div className='cutListContent'>
+                                        Titre : {element.title}<br /> De {formatTime(element.begin)} à {formatTime(element.end)}
+                                    </div>
+                                </li>)
+                            })}
+                    </ul>
+                </div>
+            )
+        }
     }
 
 

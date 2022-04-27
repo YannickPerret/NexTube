@@ -35,7 +35,12 @@ const videoSlice = createSlice({
         },
 
         addToLocalCutlist : (state, action) => {
+
+            console.log(action.payload)
+            
             state.localCutList.push(action.payload)
+
+            return state
         },
 
         updateLocalCutList : (state, action) => {

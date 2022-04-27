@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import YouTube from 'react-youtube';
-import AddCut from './AddCut';
+import Cut from './Cut/cut';
 
 function LecteurVideo(props) {
     const {video, cutLists} = useSelector((state) => state.videoInfos)
@@ -10,13 +10,14 @@ function LecteurVideo(props) {
     const [timePlayed, setTimePlayed] = useState(0)
 
 
-    const [playerOptions, setPlayerOptions] = useState ({
+
+    const playerOptions = {
         height : '720',
         width: '1440',
         playerVars:{
             autoplay : 1,
         }
-    })
+    }
 
     const handleChangeState = (event) =>{
         if (timeLine.dataSet.length > 0){
@@ -31,10 +32,6 @@ function LecteurVideo(props) {
         }
     }
 
-    const handleSubmitCut = (_cutList) =>{
-        props.onSubmitCut(_cutList)
-    }
-
 
 
     return (
@@ -46,7 +43,7 @@ function LecteurVideo(props) {
             containerClassName='youtubeContainer'
             /> 
 
-            <AddCut event={timePlayed} url={videoData.url} onSubmitCut={handleSubmitCut}/>
+            <Cut event={timePlayed}/>
         </div> 
     );
 }
